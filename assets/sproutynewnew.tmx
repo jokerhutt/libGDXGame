@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="15">
+ <tileset firstgid="1" name="Grass" tilewidth="16" tileheight="16" tilecount="77" columns="11">
+  <image source="Grass.png" width="176" height="112"/>
+ </tileset>
+ <tileset firstgid="78" name="Water" tilewidth="16" tileheight="16" tilecount="4" columns="4">
+  <image source="Water.png" width="64" height="16"/>
+ </tileset>
+ <tileset firstgid="82" name="Basic_Grass_Biom_things" tilewidth="16" tileheight="16" tilecount="45" columns="9">
+  <image source="Basic_Grass_Biom_things.png" width="144" height="80"/>
+ </tileset>
+ <tileset firstgid="127" name="Wooden_House_Walls_Tilset" tilewidth="16" tileheight="16" tilecount="15" columns="5">
+  <image source="Wooden_House_Walls_Tilset.png" width="80" height="48"/>
+ </tileset>
+ <tileset firstgid="142" name="Wooden_House_Roof_Tilset" tilewidth="16" tileheight="16" tilecount="35" columns="7">
+  <image source="Wooden_House_Roof_Tilset.png" width="112" height="80"/>
+ </tileset>
+ <tileset firstgid="177" name="Doors" tilewidth="16" tileheight="16" tilecount="4" columns="1">
+  <image source="Doors.png" width="16" height="64"/>
+ </tileset>
+ <tileset firstgid="181" name="Tilled_Dirt_v2" tilewidth="16" tileheight="16" tilecount="77" columns="11">
+  <image source="Tilled_Dirt_v2.png" width="176" height="112"/>
+ </tileset>
+ <tileset firstgid="258" name="Free_Chicken_House" tilewidth="16" tileheight="16" tilecount="9" columns="3">
+  <image source="Free_Chicken_House.png" width="48" height="48"/>
+ </tileset>
+ <tileset firstgid="267" name="Paths" tilewidth="16" tileheight="16" tilecount="16" columns="4">
+  <image source="Paths.png" width="64" height="64"/>
+ </tileset>
+ <layer id="2" name="Water" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztwwENAAAMw6A6nH83F3JIWDVVVVXfPX31Fcw=
+  </data>
+ </layer>
+ <layer id="1" name="Ground" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztljsOgCAQBVE7o7bqVbgEp/LeUkhiNsjnsYIfiinN5A2GoIQQ6sc0mpbQZfAOmpEwZdhJnQbagKuDbacPjg7GuzkI7RDTBfWmdonxykJehKveyH91hjawNbHtTvWivavXf4Zf3/tGrwS8qeeKep/WmeOeLrV31iwFvDl2u7xmt48YX398szq8d7zHON+joV24dlYwdhGMlvo=
+  </data>
+ </layer>
+ <layer id="3" name="Decor" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4D2oAmIG7DgZhrb24ZDvGWI2MvEyMDADMQsjLSzNxmLGCvQPjYgZifS3nYg7oLiTUjsDuK0wwEH0D5OIOYi0l5kIALUI0iGPmoA/gGyF+RnSTwYFB5bgeq24cHbaeAuUHgcANIH8eBDVLIrGIhDqGwvspnIbGQQA8SxVLYX2UxkNi5Az3AeyfaCwHCwF1daprW9xKRlGDgNxGfw4LMk2DsKRsEoIB4AACI9XMY=
+  </data>
+ </layer>
+ <objectgroup id="4" name="Tree">
+  <object id="1" x="112" y="356" visible="0"/>
+  <object id="2" x="76" y="252" width="8" height="16"/>
+  <object id="7" x="124" y="252" width="8" height="16"/>
+  <object id="8" x="220.218" y="234.773" width="8" height="16"/>
+  <object id="9" x="107.815" y="345.697" width="8" height="16"/>
+ </objectgroup>
+ <objectgroup id="6" name="Wall">
+  <object id="10" x="64" y="152" width="48" height="8"/>
+  <object id="11" x="128" y="152" width="48" height="8"/>
+  <object id="12" x="64" y="80" width="4" height="72"/>
+  <object id="13" x="172" y="80" width="4" height="72"/>
+  <object id="14" x="68" y="90" width="104" height="2"/>
+ </objectgroup>
+</map>
