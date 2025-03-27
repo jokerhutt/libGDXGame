@@ -59,7 +59,7 @@ public class FarmScreen implements Screen {
         treeCollisionRects = new Array<>();
         treeCollisionRects = mapLoader.createCollisionRects("Tree");
 
-        player = new Player(15, 15, treeCollisionRects);
+        player = new Player(15, 15, this);
 
 
 
@@ -121,8 +121,12 @@ public class FarmScreen implements Screen {
             collisionDebugger.playerCollisionDebug();
         }
         if (CollisionDebug.SHOWTREECOLLISION) {
-            collisionDebugger.treeCollisionDebug(treeCollisionRects);
+            collisionDebugger.staticObjectCollisionDebug(treeCollisionRects);
         }
+        if (CollisionDebug.SHOWHOUSECOLLISION) {
+            collisionDebugger.staticObjectCollisionDebug(wallCollisionRects);
+        }
+
 
     }
 

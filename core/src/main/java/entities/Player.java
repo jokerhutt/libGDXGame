@@ -20,6 +20,8 @@ public class Player extends Entity {
     public Sprite sprite;
     public TextureRegion idleDown, idleUp, idleLeft, idleRight;
     public Animation<TextureRegion> walkDown, walkUp, walkLeft, walkRight;
+    float shrinkX = 0.5f;
+    float shrinkY = 0.2f;
     public float animationTimer = 0f;
     public Vector2 lastDirection = new Vector2(0, -1);
     public Array<Rectangle> collisionRects;
@@ -85,24 +87,30 @@ public class Player extends Entity {
             playerAnimationHandler.handleIdleAnimation();
         }
 
-        futurePosition.set(position).add(velocity.x * delta, velocity.y * delta);
-        playerRect.set(futurePosition.x + 0.5f, futurePosition.y + 0.2f, sprite.getWidth() - 2 * 0.5f, sprite.getHeight() - 6 * 0.2f);
+        //First move X
+        //Move the Hypothetical player in the X direction
+        futurePosition.set(position.x + velocity.x * delta, position.y);
+        //Move the players collision box in the X direction
+        playerRect.set(futurePosition.x + shrinkX, futurePosition.y + shrinkY,
+            sprite.getWidth() - 2 * shrinkX, sprite.getHeight() - 6 * shrinkY);
 
-        if (this.checkWallCollision(screen.treeCollisionRects)) {
-            isColliding = true;
-        }
-
-        if (this.checkWallCollision(screen.wallCollisionRects)) {
-            isColliding = true;
-        }
-        else {
-            isColliding = false;
+        //If the predicted position doesnt overlap on x, move the player in the x axis (regardless of y axis)
+        if (!checkWallCollision(screen.treeCollisionRects) && !checkWallCollision(screen.wallCollisionRects)) {
+            position.x = futurePosition.x;
         }
 
-        if (!isColliding) {
-            position.set(futurePosition);
-            sprite.setPosition(position.x, position.y);
+        // --- Then move Y ---
+        futurePosition.set(position.x, position.y + velocity.y * delta);
+        playerRect.set(futurePosition.x + shrinkX, futurePosition.y + shrinkY,
+            sprite.getWidth() - 2 * shrinkX, sprite.getHeight() - 6 * shrinkY);
+
+        //If the predicted position doesnt overlap on y, move the player in the x axis (regardless of x axis)
+        if (!checkWallCollision(screen.treeCollisionRects) && !checkWallCollision(screen.wallCollisionRects)) {
+            position.y = futurePosition.y;
         }
+
+        // --- Set final sprite position ---
+        sprite.setPosition(position.x, position.y);
 
     }
 
@@ -125,6 +133,7 @@ public class Player extends Entity {
         for (Rectangle rect : collisionRs) {
             if (rect.overlaps(playerRect)) {
                 doesCollide = true;
+                System.out.println("collision");
                 break;
             }
         }

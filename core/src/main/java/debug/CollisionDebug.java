@@ -10,6 +10,7 @@ public class CollisionDebug {
 
     public static boolean SHOWPLAYERCOLLISION = true;
     public static boolean SHOWTREECOLLISION = true;
+    public static boolean SHOWHOUSECOLLISION = true;
 
     FarmScreen screen;
     ShapeRenderer shapeRenderer;
@@ -36,29 +37,39 @@ public class CollisionDebug {
             shapeRenderer.end();
         }
 
-    public void treeCollisionDebug (Array<Rectangle> treeRects) {
-//        System.out.println("Tree rect count: " + treeRects.size);
-
+    public void staticObjectCollisionDebug (Array<Rectangle> rects) {
         shapeRenderer.setProjectionMatrix(screen.camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.BLUE);
-        for (Rectangle treeRect: treeRects) {
-//            System.out.println(treeRect.x);
-//            System.out.println(treeRect.y);
-//            System.out.println(treeRect.width);
-//            System.out.println(treeRect.height);
-
+        for (Rectangle rect: rects) {
             shapeRenderer.rect(
-                treeRect.x,
-                treeRect.y,
-                treeRect.width,
-                treeRect.height
+                rect.x,
+                rect.y,
+                rect.width,
+                rect.height
             );
 
         }
-
         shapeRenderer.end();
     }
+
+    public void staticObjectCollisionDebug (Array<Rectangle> rects, Color color) {
+        shapeRenderer.setProjectionMatrix(screen.camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(color);
+        for (Rectangle rect: rects) {
+            shapeRenderer.rect(
+                rect.x,
+                rect.y,
+                rect.width,
+                rect.height
+            );
+
+        }
+        shapeRenderer.end();
+    }
+
+
 
 
 
