@@ -5,12 +5,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import jokerhut.main.FarmScreen;
+import objects.GameObject;
 
 public class CollisionDebug {
 
     public static boolean SHOWPLAYERCOLLISION = true;
-    public static boolean SHOWTREECOLLISION = true;
-    public static boolean SHOWHOUSECOLLISION = true;
+    public static boolean SHOWGAMEOBJECTCOLLISION = true;
+    public static boolean SHOWSTATICOBJECTCOLLISION = true;
 
     FarmScreen screen;
     ShapeRenderer shapeRenderer;
@@ -23,7 +24,7 @@ public class CollisionDebug {
 
     public void playerCollisionDebug () {
 
-            shapeRenderer.setProjectionMatrix(screen.camera.combined);
+            shapeRenderer.setProjectionMatrix(screen.mainCamera.camera.combined);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.RED);
 
@@ -38,7 +39,7 @@ public class CollisionDebug {
         }
 
     public void staticObjectCollisionDebug (Array<Rectangle> rects) {
-        shapeRenderer.setProjectionMatrix(screen.camera.combined);
+        shapeRenderer.setProjectionMatrix(screen.mainCamera.camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.BLUE);
         for (Rectangle rect: rects) {
@@ -53,21 +54,22 @@ public class CollisionDebug {
         shapeRenderer.end();
     }
 
-    public void staticObjectCollisionDebug (Array<Rectangle> rects, Color color) {
-        shapeRenderer.setProjectionMatrix(screen.camera.combined);
+    public void gameObjectCollisionDebug (Array<GameObject> gameObjects) {
+        shapeRenderer.setProjectionMatrix(screen.mainCamera.camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(color);
-        for (Rectangle rect: rects) {
+        shapeRenderer.setColor(Color.BLUE);
+        for (GameObject gameObject: gameObjects) {
             shapeRenderer.rect(
-                rect.x,
-                rect.y,
-                rect.width,
-                rect.height
+                gameObject.collisionRect.x,
+                gameObject.collisionRect.y,
+                gameObject.collisionRect.width,
+                gameObject.collisionRect.height
             );
-
         }
         shapeRenderer.end();
     }
+
+
 
 
 

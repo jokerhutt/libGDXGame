@@ -14,6 +14,7 @@ import jokerhut.main.AnimationHandler;
 import jokerhut.main.FarmScreen;
 import jokerhut.main.KeyHandler;
 import movementUtils.DirectionUtils;
+import objects.GameObject;
 
 public class Player extends Entity {
 
@@ -71,6 +72,15 @@ public class Player extends Entity {
 
     }
 
+    public float getCenterX() {
+        return this.position.x + this.sprite.getWidth() / 2f;
+    }
+    public float getCenterY () {
+        return this.position.y + this.sprite.getHeight() / 2f;
+    }
+
+
+
     public void handleMovement (float delta) {
 
         animationTimer += delta;
@@ -95,7 +105,7 @@ public class Player extends Entity {
             sprite.getWidth() - 2 * shrinkX, sprite.getHeight() - 6 * shrinkY);
 
         //If the predicted position doesnt overlap on x, move the player in the x axis (regardless of y axis)
-        if (!checkWallCollision(screen.treeCollisionRects) && !checkWallCollision(screen.wallCollisionRects)) {
+        if (!checkGameObjectCollision(screen.treeObjects) && !checkStaticObjectCollision(screen.wallCollisionRects)) {
             position.x = futurePosition.x;
         }
 
@@ -105,7 +115,7 @@ public class Player extends Entity {
             sprite.getWidth() - 2 * shrinkX, sprite.getHeight() - 6 * shrinkY);
 
         //If the predicted position doesnt overlap on y, move the player in the x axis (regardless of x axis)
-        if (!checkWallCollision(screen.treeCollisionRects) && !checkWallCollision(screen.wallCollisionRects)) {
+        if (!checkGameObjectCollision(screen.treeObjects) && !checkStaticObjectCollision(screen.wallCollisionRects)) {
             position.y = futurePosition.y;
         }
 
@@ -127,11 +137,25 @@ public class Player extends Entity {
         walkRight = new Animation<>(0.2f, split[10][7], split[10][10]);
     }
 
-    public boolean checkWallCollision (Array<Rectangle> collisionRs) {
+    public boolean checkStaticObjectCollision (Array<Rectangle> collisionRs) {
 
         boolean doesCollide = false;
         for (Rectangle rect : collisionRs) {
             if (rect.overlaps(playerRect)) {
+                doesCollide = true;
+                System.out.println("collision");
+                break;
+            }
+        }
+        return doesCollide;
+
+    }
+
+    public boolean checkGameObjectCollision (Array<GameObject> gameObjects) {
+
+        boolean doesCollide = false;
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject.collisionRect.overlaps(playerRect)) {
                 doesCollide = true;
                 System.out.println("collision");
                 break;

@@ -1,5 +1,6 @@
 package jokerhut.main;
 
+import camera.MainCamera;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -13,11 +14,14 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import constants.Constants;
 import debug.CollisionDebug;
 import entities.Player;
 import com.badlogic.gdx.math.Rectangle;
+import objects.GameObject;
 import sound.MusicHandler;
 
 
@@ -26,44 +30,38 @@ public class FarmScreen implements Screen {
 
     public TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-    public OrthographicCamera camera;
     public Player player;
     private SpriteBatch batch;
 
-    public Array<Rectangle> treeCollisionRects;
+    public Array<GameObject> treeObjects;
     public Array<Rectangle> wallCollisionRects;
 
     MapLoader mapLoader;
     MusicHandler musicHandler;
     CollisionDebug collisionDebugger;
-
+    public MainCamera mainCamera;
 
 
     @Override
     public void show() {
-        // Prepare your screen here.
 
         map = new TmxMapLoader().load("sproutynewnew.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, Constants.SCALE);
-        camera = new OrthographicCamera();
 
         musicHandler = new MusicHandler();
         musicHandler.playRainyDayMusic();
 
         mapLoader = new MapLoader(this);
+        mainCamera = new MainCamera(this);
         collisionDebugger = new CollisionDebug(this);
 
         wallCollisionRects = new Array<>();
-        wallCollisionRects = mapLoader.createCollisionRects("Wall");
+        wallCollisionRects = mapLoader.createStaticCollisionRects("Wall");
 
-        treeCollisionRects = new Array<>();
-        treeCollisionRects = mapLoader.createCollisionRects("Tree");
+        treeObjects = new Array<>();
+        treeObjects = mapLoader.loadObjectsFromLayer("Tree");
 
         player = new Player(15, 15, this);
-
-
-
-        camera.setToOrtho(false, 60, 60);
 
         batch = new SpriteBatch();
 
@@ -74,21 +72,17 @@ public class FarmScreen implements Screen {
         // Draw your screen here. "delta" is the time since last render in seconds.
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        camera.update();
-        renderer.setView(camera);
+        mainCamera.updateCamera(delta);
+        renderer.setView(mainCamera.camera);
         renderer.render();
-
         player.update(delta);
-        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(mainCamera.camera.combined);
         batch.begin();
-
         player.render(batch);
-
         batch.end();
-
         runScreenDebugMethods();
-
     }
+
 
     @Override
     public void resize(int width, int height) {
@@ -120,10 +114,10 @@ public class FarmScreen implements Screen {
         if (CollisionDebug.SHOWPLAYERCOLLISION) {
             collisionDebugger.playerCollisionDebug();
         }
-        if (CollisionDebug.SHOWTREECOLLISION) {
-            collisionDebugger.staticObjectCollisionDebug(treeCollisionRects);
+        if (CollisionDebug.SHOWGAMEOBJECTCOLLISION) {
+            collisionDebugger.gameObjectCollisionDebug(treeObjects);
         }
-        if (CollisionDebug.SHOWHOUSECOLLISION) {
+        if (CollisionDebug.SHOWSTATICOBJECTCOLLISION) {
             collisionDebugger.staticObjectCollisionDebug(wallCollisionRects);
         }
 
