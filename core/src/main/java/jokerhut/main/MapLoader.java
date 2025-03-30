@@ -18,11 +18,20 @@ public class MapLoader {
         this.screen = screen;
     }
 
-    public Array<Rectangle> createStaticCollisionRects (String layerName) {
+    public Array<Rectangle> createStaticCollisionRects (String layerName, String layerName2) {
 
         Array<Rectangle> newCollisionRects = new Array<>();
         MapLayer collisionLayer = screen.map.getLayers().get(layerName);
+        addRectsToArray(collisionLayer, newCollisionRects);
 
+        collisionLayer = screen.map.getLayers().get(layerName2);
+        addRectsToArray(collisionLayer, newCollisionRects);
+
+        return newCollisionRects;
+
+    }
+
+    public void addRectsToArray (MapLayer collisionLayer, Array<Rectangle> newCollisionRects) {
         if (collisionLayer != null) {
             MapObjects objects = collisionLayer.getObjects();
             for (RectangleMapObject obj : objects.getByType(RectangleMapObject.class)) {
@@ -42,8 +51,6 @@ public class MapLoader {
                 newCollisionRects.add(scaled);
             }
         }
-        return newCollisionRects;
-
     }
 
     public Array<GameObject> loadObjectsFromLayer(String layerName) {

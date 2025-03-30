@@ -21,10 +21,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import constants.Constants;
 import debug.CollisionDebug;
-import entities.Animal;
-import entities.Chicken;
-import entities.Cow;
-import entities.Player;
+import entities.*;
 import com.badlogic.gdx.math.Rectangle;
 import hud.HUD;
 import objects.GameObject;
@@ -58,7 +55,7 @@ public class FarmScreen implements Screen {
     @Override
     public void show() {
 
-        map = new TmxMapLoader().load("sproutynewnew.tmx");
+        map = new TmxMapLoader().load("sproutnewwater.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, Constants.SCALE);
 
         musicHandler = new MusicHandler();
@@ -72,7 +69,7 @@ public class FarmScreen implements Screen {
         animals = new Animal[8];
 
         wallCollisionRects = new Array<>();
-        wallCollisionRects = mapLoader.createStaticCollisionRects("Wall");
+        wallCollisionRects = mapLoader.createStaticCollisionRects("Wall", "Water");
 
         treeObjects = new Array<>();
         treeObjects = mapLoader.loadObjectsFromLayer("Tree");
@@ -95,6 +92,10 @@ public class FarmScreen implements Screen {
         animals[i] = new Cow(30f, 18f, this);
         i++;
         animals[i] = new Cow(25f, 18f, this);
+        i++;
+        animals[i] = new Frog(25f, 40f, this);
+        i++;
+        animals[i] = new Frog(25f, 30f, this);
         i++;
     }
 
