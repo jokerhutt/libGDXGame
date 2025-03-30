@@ -66,7 +66,7 @@ public class MapLoader {
 
                 switch (layerName) {
                     case "Tree":
-                        newObject = new OBJ_Tree(x, y, width, height);
+                        newObject = new OBJ_Tree(x, y, width, height, true);
                         objects.add(newObject);
                         break;
                 }

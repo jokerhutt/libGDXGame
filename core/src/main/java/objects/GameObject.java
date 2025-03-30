@@ -1,5 +1,6 @@
 package objects;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 public class GameObject {
@@ -8,14 +9,26 @@ public class GameObject {
     private float y;
     private float width;
     private float height;
+    public boolean isCollideable;
+    protected String type;
+    public Sprite sprite;
     public Rectangle collisionRect;
 
-    public GameObject(float x, float y, float width, float height) {
+    public GameObject(float x, float y, float width, float height, boolean isCollideable) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.isCollideable = isCollideable;
         createCollisionRect();
+    }
+
+    public String getType () {
+        return this.type;
+    }
+
+    public void setType (String type) {
+        this.type = type;
     }
 
     public void createCollisionRect () {

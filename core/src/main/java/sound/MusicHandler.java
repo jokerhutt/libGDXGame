@@ -2,6 +2,7 @@ package sound;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import constants.Constants;
 
 public class MusicHandler {
 
@@ -13,9 +14,11 @@ public class MusicHandler {
 
     public void playRainyDayMusic () {
 
+    if (Constants.MUSIC) {
         music.setLooping(true);
         music.setVolume(.5f);
         music.play();
+    }
 
     }
 

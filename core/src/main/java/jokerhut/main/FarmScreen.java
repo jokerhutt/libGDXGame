@@ -17,10 +17,16 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import constants.Constants;
 import debug.CollisionDebug;
+import entities.Animal;
+import entities.Chicken;
+import entities.Cow;
 import entities.Player;
 import com.badlogic.gdx.math.Rectangle;
+import hud.HUD;
 import objects.GameObject;
 import sound.MusicHandler;
 
@@ -35,10 +41,17 @@ public class FarmScreen implements Screen {
 
     public Array<GameObject> treeObjects;
     public Array<Rectangle> wallCollisionRects;
+    public Array<GameObject> canPickUpObjects;
+
+    public Animal[] animals;
+
 
     MapLoader mapLoader;
     MusicHandler musicHandler;
     CollisionDebug collisionDebugger;
+    FitViewport viewport;
+    public HUD hud;
+
     public MainCamera mainCamera;
 
 
@@ -53,7 +66,10 @@ public class FarmScreen implements Screen {
 
         mapLoader = new MapLoader(this);
         mainCamera = new MainCamera(this);
+        viewport = new FitViewport(60, 60, mainCamera.camera);
         collisionDebugger = new CollisionDebug(this);
+
+        animals = new Animal[8];
 
         wallCollisionRects = new Array<>();
         wallCollisionRects = mapLoader.createStaticCollisionRects("Wall");
@@ -62,9 +78,41 @@ public class FarmScreen implements Screen {
         treeObjects = mapLoader.loadObjectsFromLayer("Tree");
 
         player = new Player(15, 15, this);
+        addAnimals();
 
         batch = new SpriteBatch();
+        hud = new HUD(new ScreenViewport(), batch, this);
 
+
+    }
+
+    public void addAnimals () {
+        int i = 0;
+        animals[i] = new Chicken(20f, 20f, this);
+        i++;
+        animals[i] = new Chicken(18f, 18f, this);
+        i++;
+        animals[i] = new Cow(30f, 18f, this);
+        i++;
+        animals[i] = new Cow(25f, 18f, this);
+        i++;
+    }
+
+    public void renderAnimals () {
+        for (int i = 0; i < animals.length; i++) {
+            if (animals[i] != null) {
+                animals[i].render(batch);
+            }
+        }
+    }
+
+    public void updateAnimals (float delta) {
+        for (int i = 0; i < animals.length; i++){
+            if (animals[i] != null) {
+                Animal selectedAnimal = animals[i];
+                selectedAnimal.update(delta);
+            }
+        }
     }
 
     @Override
@@ -76,17 +124,21 @@ public class FarmScreen implements Screen {
         renderer.setView(mainCamera.camera);
         renderer.render();
         player.update(delta);
+        updateAnimals(delta);
         batch.setProjectionMatrix(mainCamera.camera.combined);
         batch.begin();
         player.render(batch);
+        renderAnimals();
         batch.end();
         runScreenDebugMethods();
+        hud.render(delta);
     }
 
 
     @Override
     public void resize(int width, int height) {
-        // Resize your screen here. The parameters represent the new window size.
+        viewport.update(width, height, true);
+        hud.resize(width, height); // now safe
     }
 
     @Override
@@ -120,7 +172,9 @@ public class FarmScreen implements Screen {
         if (CollisionDebug.SHOWSTATICOBJECTCOLLISION) {
             collisionDebugger.staticObjectCollisionDebug(wallCollisionRects);
         }
-
+        if (CollisionDebug.SHOWANIMALCOLLISION) {
+            collisionDebugger.entityArrayCollisionDebug();
+        }
 
     }
 

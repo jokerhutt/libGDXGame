@@ -1,5 +1,7 @@
 package movementUtils;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class DirectionUtils {
 
     public DirectionUtils () {
@@ -16,15 +18,24 @@ public class DirectionUtils {
 
     }
 
-    public static float calculateScaledMagnitude (float dx, float dy, float speed) {
+
+    public static Vector2 calculateDiagonalVector (float dx, float dy, float speed) {
+        Vector2 scaledVector = new Vector2(dx, dy);
         float magnitude = calculateMagnitude(dx, dy);
 
         if (magnitude == 0) {
-            return 0f;
+            scaledVector.x = 0;
+            scaledVector.y = 0;
+            return scaledVector;
         }
 
-        float scaledMagnitude = speed / magnitude;
-        return scaledMagnitude;
+        scaledVector.x = (dx / magnitude) * speed;
+        scaledVector.y = (dy / magnitude) * speed;
+
+        System.out.println(scaledVector.y);
+        System.out.println(scaledVector.x);
+
+        return scaledVector;
     }
 
 }
