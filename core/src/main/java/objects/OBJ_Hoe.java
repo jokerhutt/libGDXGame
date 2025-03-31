@@ -12,6 +12,7 @@ public class OBJ_Hoe extends GameObject{
         this.image = new Texture("floweringpot.png");
         setImage();
         this.type = "type_tool";
+        this.name = "floweringPot";
     }
 
     public void setImage () {

@@ -31,6 +31,8 @@ public class HUD {
     TextureRegionDrawable slotDrawable;
     protected Texture soundIcon;
     FarmScreen screen;
+    private BitmapFont font = new BitmapFont();
+    Texture dialogueBoxTexture = new Texture("Premade dialog box  big.png");
 
     public HUD(Viewport viewport, SpriteBatch batch, FarmScreen screen) {
         stage = new Stage(new ScreenViewport(), batch);
@@ -62,6 +64,41 @@ public class HUD {
 
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+    }
+
+    public void drawDialogue(String line, SpriteBatch batch) {
+        float screenWidth = Gdx.graphics.getWidth();
+
+        float slotSize = 64f;
+        float padding = 4f;
+        float inventoryWidth = 4 * slotSize + 3 * padding * 2;
+        float boxHeight = 2 * slotSize + padding * 2;
+        float boxWidth = screenWidth - inventoryWidth - 40;
+        float boxX = inventoryWidth + 30;
+        float boxY = 10;
+
+        // 1. Draw the dialogue box first (behind the portrait)
+        batch.draw(dialogueBoxTexture, boxX, boxY, boxWidth, boxHeight);
+
+        // 2. Draw the portrait on top, slightly more to the right
+        float portraitSize = 72f;
+        float portraitX = boxX + 30; // shift into the dialogue box slightly
+        float portraitY = boxY + boxHeight - portraitSize - 30;
+
+        if (screen.currentNPC != null && screen.currentNPC.portrait != null) {
+            batch.draw(screen.currentNPC.portrait, portraitX, portraitY, portraitSize, portraitSize);
+        }
+
+        // 3. Draw the dialogue text, shifted right to avoid portrait
+        font.getData().setScale(1.2f);
+        float textX = portraitX + portraitSize + 35;
+        float textY = boxY + boxHeight - 20;
+        font.draw(batch, screen.currentNPC.name, textX, textY);
+
+        float lineTextX = textX;
+        float lineTextY = textY - 35;
+
+        font.draw(batch, line, lineTextX, lineTextY);
     }
 
     public void refreshInventory () {

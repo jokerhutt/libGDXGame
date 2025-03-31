@@ -1,5 +1,7 @@
 package entities;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -10,14 +12,24 @@ public abstract class Entity {
     protected Vector2 velocity;
     public Rectangle collisionRect;
     protected float speed = 12f;
+    protected float shrinkX;
+    public Texture speechBubble;
+    public Rectangle dialogueCollisionZone;
+    protected float shrinkY;
+    public Sprite sprite;
+    public boolean isInteracting;
+    public boolean isInDialogue;
 
     public Entity (float x, float y) {
 
         this.position = new Vector2(x, y);
         this.velocity = new Vector2(0, 0);
         this.collisionRect = new Rectangle();
+        this.speechBubble = new Texture("speechBubble.png");
 
     }
+
+
 
     public Rectangle getCollisionRect () {
         return this.collisionRect;

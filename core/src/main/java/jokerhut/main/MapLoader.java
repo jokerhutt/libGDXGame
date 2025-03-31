@@ -3,6 +3,7 @@ package jokerhut.main;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import constants.Constants;
@@ -53,6 +54,32 @@ public class MapLoader {
         }
     }
 
+    public Array<FarmTile> addFarmTiles () {
+        Array<FarmTile> farmTiles = new Array<>();
+        TiledMapTileLayer farmLayer = (TiledMapTileLayer) screen.map.getLayers().get("Farmable");
+
+        if (farmLayer != null) {
+            int width = farmLayer.getWidth();
+            int height = farmLayer.getHeight();
+            int tileSize = farmLayer.getTileWidth(); // usually 16
+
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    TiledMapTileLayer.Cell cell = farmLayer.getCell(x, y);
+                    if (cell != null && cell.getTile() != null) {
+                        float worldX = x * tileSize * Constants.SCALE;
+                        float worldY = y * tileSize * Constants.SCALE;
+                        float size = tileSize * Constants.SCALE;
+
+                        FarmTile tile = new FarmTile(worldX, worldY, size, size);
+                        farmTiles.add(tile);
+                    }
+                }
+            }
+        }
+
+        return farmTiles;
+    }
     public Array<GameObject> loadObjectsFromLayer(String layerName) {
         Array<GameObject> objects = new Array<>();
         MapLayer layer = screen.map.getLayers().get(layerName);

@@ -12,6 +12,7 @@ public class OBJ_Axe extends GameObject{
         this.image = new Texture("axe.png");
         setImage();
         this.type = "type_tool";
+        this.name = "axe";
     }
 
     public void setImage () {

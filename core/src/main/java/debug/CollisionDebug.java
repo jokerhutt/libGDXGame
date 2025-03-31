@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import entities.Animal;
 import entities.Entity;
 import jokerhut.main.FarmScreen;
+import jokerhut.main.FarmTile;
 import objects.GameObject;
 
 public class CollisionDebug {
@@ -15,6 +16,12 @@ public class CollisionDebug {
     public static boolean SHOWGAMEOBJECTCOLLISION = true;
     public static boolean SHOWSTATICOBJECTCOLLISION = true;
     public static boolean SHOWANIMALCOLLISION = true;
+    public static boolean SHOWNPCCOLLISION = true;
+    public static boolean SHOWDIALOGUECOLLISION = true;
+    public static boolean SHOWFARMABLEDEBUG = true;
+    public static boolean SHOWFARMINGRANGEDEBUG = true;
+
+
 
     FarmScreen screen;
     ShapeRenderer shapeRenderer;
@@ -41,19 +48,70 @@ public class CollisionDebug {
             shapeRenderer.end();
         }
 
-    public void entityArrayCollisionDebug () {
+    public void playerFarmingRangeDebug () {
+
+        shapeRenderer.setProjectionMatrix(screen.mainCamera.camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.PINK);
+
+        shapeRenderer.rect(
+            screen.player.farmingRange.x,
+            screen.player.farmingRange.y,
+            screen.player.farmingRange.width,
+            screen.player.farmingRange.height
+        );
+
+        shapeRenderer.end();
+    }
+
+    public void playerDialogueCollisionDebug () {
+
+        shapeRenderer.setProjectionMatrix(screen.mainCamera.camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.PINK);
+
+        shapeRenderer.rect(
+            screen.player.dialogueCollisionZone.x,
+            screen.player.dialogueCollisionZone.y,
+            screen.player.dialogueCollisionZone.width,
+            screen.player.dialogueCollisionZone.height
+        );
+
+        shapeRenderer.end();
+    }
+
+    public void showFarmableTilesDebug (Array<FarmTile> farmTiles) {
+
+        shapeRenderer.setProjectionMatrix(screen.mainCamera.camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.ORANGE);
+
+        for (FarmTile farmTile : farmTiles) {
+            if (farmTile != null) {
+                shapeRenderer.rect(
+                    farmTile.bounds.x,
+                    farmTile.bounds.y,
+                    farmTile.bounds.width,
+                    farmTile.bounds.height
+                );
+            }
+        }
+        shapeRenderer.end();
+    }
+
+    public void entityArrayCollisionDebug (Entity[] entities) {
 
         shapeRenderer.setProjectionMatrix(screen.mainCamera.camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.GREEN);
 
-        for (int i = 0; i < screen.animals.length; i++) {
-            if (screen.animals[i] != null) {
+        for (int i = 0; i < entities.length; i++) {
+            if (entities[i] != null) {
                 shapeRenderer.rect(
-                    screen.animals[i].getCollisionRect().x,
-                    screen.animals[i].getCollisionRect().y,
-                    screen.animals[i].getCollisionRect().width,
-                    screen.animals[i].getCollisionRect().height
+                    entities[i].getCollisionRect().x,
+                    entities[i].getCollisionRect().y,
+                    entities[i].getCollisionRect().width,
+                    entities[i].getCollisionRect().height
                 );
             }
 

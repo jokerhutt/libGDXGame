@@ -13,6 +13,7 @@ public class GameObject {
     protected String type;
     public Sprite sprite;
     public Rectangle collisionRect;
+    public String name;
 
     public GameObject(float x, float y, float width, float height, boolean isCollideable) {
         this.x = x;
