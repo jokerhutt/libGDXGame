@@ -26,6 +26,7 @@ public class Player extends Entity {
     public TextureRegion idleDown, idleUp, idleLeft, idleRight;
     public Animation<TextureRegion> walkDown, walkUp, walkLeft, walkRight;
     public Animation<TextureRegion> flowerLeft, flowerRight, flowerUp, flowerDown;
+    public Animation<TextureRegion> axeLeft, axeRight, axeUp, axeDown;
     public Animation<TextureRegion> actionDown, actionUp, actionLeft, actionRight;
 
 
@@ -152,6 +153,12 @@ public class Player extends Entity {
                     this.actionDown = this.flowerDown;
                     this.actionLeft = this.flowerLeft;
                     this.actionRight = this.flowerRight;
+                    break;
+                case "axe" :
+                    this.actionUp = this.axeUp;
+                    this.actionDown = this.axeDown;
+                    this.actionLeft = this.axeLeft;
+                    this.actionRight = this.axeRight;
                     break;
             }
 
@@ -282,6 +289,11 @@ public class Player extends Entity {
         flowerUp = new Animation<>(0.2f, splitActionsSheet [9][0], splitActionsSheet[9][1]);
         flowerLeft = new Animation<>(0.2f, splitActionsSheet [10][0], splitActionsSheet[10][1]);
         flowerRight = new Animation<>(0.2f, splitActionsSheet [11][0], splitActionsSheet[11][1]);
+
+        axeDown = new Animation<>(0.2f, splitActionsSheet [4][0], splitActionsSheet[4][1]);
+        axeUp = new Animation<>(0.2f, splitActionsSheet [5][0], splitActionsSheet[5][1]);
+        axeLeft = new Animation<>(0.2f, splitActionsSheet [6][0], splitActionsSheet[6][1]);
+        axeRight = new Animation<>(0.2f, splitActionsSheet [7][0], splitActionsSheet[7][1]);
 
     }
 

@@ -3,6 +3,7 @@ package jokerhut.main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import entities.Entity;
 import entities.NPC;
@@ -54,6 +55,14 @@ public class KeyHandler {
             int screenY = Gdx.input.getY();
             screen.worldClick.set(screenX, screenY, 0);
             screen.mainCamera.camera.unproject(screen.worldClick);
+
+            float dx = screen.worldClick.x - player.getCenterX();
+            float dy = screen.worldClick.y - player.getCenterY();
+
+            setDirectionBasedOnAction(dx, dy);
+
+            player.performingAction = true;
+
             for (FarmTile farmTile : farmTiles) {
                 if (
                     farmTile.bounds.contains(screen.worldClick.x, screen.worldClick.y) &&
@@ -62,14 +71,6 @@ public class KeyHandler {
                     System.out.println("Tilled tile at: " + farmTile.x + ", " + farmTile.y);
                     hasFarmed = true;
 
-                    if (screen.worldClick.x < player.getCenterX()) {
-                        player.sprite.setRegion(player.actionLeft.getKeyFrame(player.animationTimer, true));
-                        player.lastDirection.set(-1, 0);
-                    } else {
-                        player.sprite.setRegion(player.actionRight.getKeyFrame(player.animationTimer, true));
-                        player.lastDirection.set(1, 0);
-                    }
-
                     farmTile.increaseStage(player.equippedItem.name);
 
                     break;
@@ -77,7 +78,26 @@ public class KeyHandler {
             }
         }
         return hasFarmed;
+    }
 
+    public void setDirectionBasedOnAction (float dx, float dy) {
+        if (Math.abs(dy) > Math.abs(dx)) {
+            if (dy > 0) {
+                player.sprite.setRegion(player.actionUp.getKeyFrame(player.animationTimer, true));
+                player.lastDirection.set(0, 1);
+            } else {
+                player.sprite.setRegion(player.actionDown.getKeyFrame(player.animationTimer, true));
+                player.lastDirection.set(0, -1);
+            }
+        } else {
+            if (dx > 0) {
+                player.sprite.setRegion(player.actionRight.getKeyFrame(player.animationTimer, true));
+                player.lastDirection.set(1, 0);
+            } else {
+                player.sprite.setRegion(player.actionLeft.getKeyFrame(player.animationTimer, true));
+                player.lastDirection.set(-1, 0);
+            }
+        }
     }
 
     public boolean performAction (float delta) {
