@@ -13,7 +13,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import entities.Player;
+import debug.CollisionDebug;
+import entities.*;
+import sound.MusicHandler;
 
 /** First screen of the application. Displayed after the application is created. */
 public class MainScreen implements Screen {
@@ -24,8 +26,12 @@ public class MainScreen implements Screen {
     public Array<Rectangle> wallCollisionRects;
     MapLoader mapLoader;
     SpriteBatch batch;
-    MainCamera mainCamera;
+    public MainCamera mainCamera;
     FitViewport viewport;
+    public CollisionChecker collisionChecker;
+    CollisionDebug collisionDebugger;
+    MusicHandler musicHandler;
+    public Array<Entity> npcArray;
 
     public Player player;
 
@@ -35,17 +41,19 @@ public class MainScreen implements Screen {
 
         map = new TmxMapLoader().load("ninjatilesmap.tmx");
         mapLoader = new MapLoader(this);
-
+        this.musicHandler = new MusicHandler();
         mainCamera = new MainCamera(this);
-        viewport = new FitViewport(60, 60, mainCamera.camera);
-        renderer = new OrthogonalTiledMapRenderer(map, 3f);
-
+        viewport = new FitViewport(Constants.screenWidthInTiles, Constants.screenHeightInTiles, mainCamera.camera);
+        renderer = new OrthogonalTiledMapRenderer(map, Constants.SCALE);
+        collisionDebugger = new CollisionDebug(this);
         wallCollisionRects = new Array<>();
         wallCollisionRects = mapLoader.createStaticCollisionRects("Collision");
-
+        this.collisionChecker = new CollisionChecker();
+        this.npcArray = setupNpcs();
         batch = new SpriteBatch();
 
         player = new Player(5, 15, this);
+        musicHandler.playVillageMusic();
 
     }
 
@@ -54,17 +62,52 @@ public class MainScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         mainCamera.updateCamera(delta);
+        player.update(delta);
+        updateEntityArrays(delta);
         renderer.setView(mainCamera.camera);
         batch.setProjectionMatrix(mainCamera.camera.combined); // sync batch with camera
         renderer.render();
         batch.begin();
         player.render(batch);
+        renderEntityArrays(batch);
         batch.end();
+        runScreenDebugMethods();
+    }
+
+    public Array<Entity> setupNpcs () {
+        npcArray = new Array<>();
+        npcArray.add(new NPC_OldMan(7, 15, this));
+        npcArray.add(new NPC_OldMan(9, 13, this));
+        npcArray.add(new NPC_Guard(14, 0.5f, this));
+        npcArray.add(new NPC_Guard(15, 0.5f, this));
+        npcArray.add(new NPC_Gilbert(13.7f, 7f, this));
+
+        return npcArray;
+    }
+
+    public void updateEntityArrays (float delta) {
+
+        for (Entity npc : npcArray) {
+            if (npc != null) {
+                npc.update(delta);
+            }
+        }
+
+    }
+
+    public void renderEntityArrays (SpriteBatch batch) {
+
+        for (Entity npc : npcArray) {
+            if (npc != null) {
+                npc.render(batch);
+            }
+        }
+
     }
 
     @Override
     public void resize(int width, int height) {
-        // Resize your screen here. The parameters represent the new window size.
+        viewport.update(width, height, true);
     }
 
     @Override
@@ -85,5 +128,27 @@ public class MainScreen implements Screen {
     @Override
     public void dispose() {
         // Destroy screen's assets here.
+    }
+
+    public void runScreenDebugMethods () {
+
+        if (CollisionDebug.SHOWSTATICOBJECTCOLLISION) {
+            collisionDebugger.staticObjectCollisionDebug(wallCollisionRects);
+        }
+        if (CollisionDebug.SHOWPLAYERCOLLISION) {
+            collisionDebugger.playerCollisionDebug();
+        }
+        if (CollisionDebug.SHOWNPCCOLLISION) {
+            collisionDebugger.EntityCollisionDebug(npcArray);
+        }
+
+        if (CollisionDebug.DRAWTILEGRID) {
+            int mapWidth = map.getProperties().get("width", Integer.class);
+            int mapHeight = map.getProperties().get("height", Integer.class);
+            collisionDebugger.drawTileGrid(mapWidth, mapHeight, 1f);
+        }
+
+
+
     }
 }

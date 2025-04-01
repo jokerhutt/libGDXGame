@@ -1,10 +1,14 @@
 package camera;
 
 import Constants.Constants;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import jokerhut.main.MainScreen;
+import sound.MusicHandler;
+
+import static Constants.Constants.screenHeightInTiles;
 
 public class MainCamera {
 
@@ -18,21 +22,25 @@ public class MainCamera {
     private float mapWidthPixels;
     private float mapHeightPixels;
 
+    int mapWidth;
+    int mapHeight;
+
     public MainCamera (MainScreen screen) {
 
         this.screen = screen;
 
-        int mapWidth = screen.map.getProperties().get("width", Integer.class);
-        int mapHeight = screen.map.getProperties().get("height", Integer.class);
         int tileWidth = screen.map.getProperties().get("tilewidth", Integer.class);
         int tileHeight = screen.map.getProperties().get("tileheight", Integer.class);
+
+        this.mapHeight = screen.map.getProperties().get("height", Integer.class);
+        this.mapWidth = screen.map.getProperties().get("width", Integer.class);
 
         mapWidthPixels = mapWidth * Constants.TILESIZE;
         mapHeightPixels = mapHeight * Constants.TILESIZE;
 
         camera = new OrthographicCamera();
 
-        camera.setToOrtho(false, 1152, 960);
+        camera.setToOrtho(false, Constants.screenWidthInTiles, Constants.screenHeightInTiles);
         camera.zoom = 0.5f;
 
     }
@@ -56,8 +64,8 @@ public class MainCamera {
         float halfViewWidth = camera.viewportWidth * 0.5f * camera.zoom;
         float halfViewHeight = camera.viewportHeight * 0.5f * camera.zoom;
 
-        float clampedX = MathUtils.clamp(cameraPosition.x, halfViewWidth, mapWidthPixels - halfViewWidth);
-        float clampedY = MathUtils.clamp(cameraPosition.y, halfViewHeight, mapHeightPixels - halfViewHeight);
+        float clampedX = MathUtils.clamp(cameraPosition.x, halfViewWidth, mapWidth - halfViewWidth);
+        float clampedY = MathUtils.clamp(cameraPosition.y, halfViewHeight, mapHeight - halfViewHeight);
 
         clampedX = Math.round(clampedX * 100f) / 100f;
         clampedY = Math.round(clampedY * 100f) / 100f;

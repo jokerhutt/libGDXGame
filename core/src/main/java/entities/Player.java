@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import jokerhut.main.AnimationHandler;
+import jokerhut.main.CollisionChecker;
 import jokerhut.main.KeyHandler;
 import jokerhut.main.MainScreen;
 
@@ -19,6 +21,8 @@ public class Player extends Entity{
     public float animationTimer = 0f;
     public boolean moving;
 
+    public final Vector2 futurePosition = new Vector2();
+
     public KeyHandler playerKeyHandler;
     MainScreen screen;
 
@@ -28,11 +32,15 @@ public class Player extends Entity{
         setupPlayerAnimation();
         playerAnimationHandler = new AnimationHandler(this);
         sprite = new Sprite(idleDown);
-        sprite.setSize(Constants.TILESIZE, Constants.TILESIZE);
+        sprite.setSize(1f, 1f);
         sprite.setPosition(this.position.x, this.position.y);
         sprite.setRegion(idleDown);
         this.moving = false;
         this.playerKeyHandler = new KeyHandler(this, screen);
+        this.hitboxWidth = 0.8f;
+        this.hitboxHeight = 0.5f;
+        this.speed = 6f;
+
 
     }
 
@@ -81,8 +89,97 @@ public class Player extends Entity{
 
     }
 
-    public void update(float delta) {
+    public void handleMovement (float delta) {
 
+        animationTimer += delta;
+        velocity.set(0, 0);
+        moving = false;
+
+        //Only Sets Direction/Velocity!!
+        if (!playerKeyHandler.handleDiagonalMovement()) {
+            playerKeyHandler.handlePlayerCardinalMovement();
+        }
+
+
+        if (!moving) {
+            animationTimer = 0f;
+            playerAnimationHandler.handleIdleAnimation();
+        }
+
+        handleCollisionAndUpdatePlayer(delta);
+
+        playerKeyHandler.checkXAndY(this);
+
+
+    }
+
+    public void handleCollisionAndUpdatePlayer (float delta) {
+
+        if (isCollidingOnAxis('x', delta)) {
+            position.x = futurePosition.x;
+        }
+        if (isCollidingOnAxis('y', delta)) {
+            position.y = futurePosition.y;
+        }
+
+        sprite.setPosition(position.x, position.y);
+
+    }
+
+    public boolean isCollidingOnAxis (char axis, float delta) {
+
+        if (axis == 'x') {
+            futurePosition.set(position.x + velocity.x * delta, position.y);
+            collisionRect.set(
+                futurePosition.x + (sprite.getWidth() - hitboxWidth) / 2f,
+                futurePosition.y,
+                hitboxWidth,
+                hitboxHeight
+            );
+
+            if (this.checkAllCollisions()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (axis == 'y') {
+            futurePosition.set(position.x, position.y + velocity.y * delta);
+            collisionRect.set(
+                futurePosition.x + (sprite.getWidth() - hitboxWidth) / 2f,
+                futurePosition.y,
+                hitboxWidth,
+                hitboxHeight
+            );
+
+            if (this.checkAllCollisions())
+            {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+
+    }
+
+    public boolean checkAllCollisions () {
+        if (!screen.collisionChecker.checkStaticObjectCollision(screen.wallCollisionRects, this) &&
+            !screen.collisionChecker.checkEntityCollision(screen.npcArray, this)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
+
+
+    public void update(float delta) {
+        handleMovement(delta);
     }
 
     public void render(SpriteBatch batch) {

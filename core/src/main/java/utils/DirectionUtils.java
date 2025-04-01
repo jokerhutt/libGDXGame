@@ -32,8 +32,6 @@ public class DirectionUtils {
         scaledVector.x = (dx / magnitude) * speed;
         scaledVector.y = (dy / magnitude) * speed;
 
-        System.out.println(scaledVector.y);
-        System.out.println(scaledVector.x);
 
         return scaledVector;
     }
